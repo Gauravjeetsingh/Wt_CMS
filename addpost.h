@@ -6,6 +6,8 @@
 #include <Wt/WRadioButton>
 #include <Wt/WButtonGroup>
 #include <Wt/WPushButton>
+#include <Wt/WAnchor>
+#include <Wt/WLink>
 
 #include "Post.h"
 
@@ -28,7 +30,9 @@ public: addPost(WContainerWidget *parent);
 	WTextArea *content_edit;
 	WButtonGroup *catgroup;
 //	WLabel *post_label;
-	
+	WText *postUpdated;
+	WAnchor *viewPost;
+
 	string string_cat;
 	
 	dbo::Session sessionpost;

@@ -29,14 +29,17 @@ addPost::addPost(WContainerWidget *parent) : WContainerWidget(parent), sqlite3("
 	cerr<<"created database" <<endl;
   }
 
-//if tables already exists then this 
   catch(exception& e) {
 	cerr<<e.what() <<endl;
 	cerr<<"Using existing database"<<endl;
   }
 
    add_new = new WContainerWidget(this);
-
+//post updated succesfully
+postUpdated = new WText("Post updated Successfully  ");
+viewPost = new WAnchor((WLink::InternalPath, "/blog/post-archives"), "view post");
+add_new->addWidget(new WBreak());
+ 
 //title of post
    WText *title_text = new WText("Title",add_new);
    
@@ -55,6 +58,9 @@ addPost::addPost(WContainerWidget *parent) : WContainerWidget(parent), sqlite3("
    content_edit = new WTextArea(add_new);
    add_new->addWidget(new WBreak());
 
+//category part of post entry
+
+//button group containing all the radio buttons
    catgroup = new WButtonGroup();
    try{
    {
@@ -72,26 +78,22 @@ addPost::addPost(WContainerWidget *parent) : WContainerWidget(parent), sqlite3("
 	showcategory();
 }
  
-
+//publish button
    WPushButton *submit_button = new WPushButton("Publish", add_new);
    submit_button->clicked().connect(this, &addPost::enterpost);
    add_new->addWidget(new WBreak());
 }
 
-void addPost::stringcategory()
+void addPost::enterpost()
 {
+	// storing the name of checked button in string
 	for(auto i: category_btn)
 	{
-
 		if(i->isChecked())
 		string_cat = i->text().toUTF8();
 	}
-}
-
-void addPost::enterpost()
-{
-	stringcategory();
-
+	
+	//Transaction for inserting the post data into table post of database
         {
         dbo::Transaction transaction(sessionpost);
 	
@@ -106,7 +108,8 @@ void addPost::enterpost()
 
         transaction.commit();
         }
-	add_new->addWidget(new WText("post updated successfully"));
+	add_new->addWidget(postUpdated);
+	add_new->addWidget(viewPost);
 }
 
 void addPost::entercategory()
@@ -135,10 +138,9 @@ void addPost::showcategory()
 	for(auto i: kat){
 
 		WRadioButton* btn = new WRadioButton((i)->categoryname, add_new);
-	
 		category_btn.push_back(btn);		
-	
 		catgroup->addButton(btn);
+
 	      }
 	}
 }
