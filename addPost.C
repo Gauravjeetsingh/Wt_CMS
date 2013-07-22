@@ -92,7 +92,10 @@ void addPost::enterpost()
 		if(i->isChecked())
 		string_cat = i->text().toUTF8();
 	}
+	if(string_cat == "")
+	add_new->addWidget(new WText("Please fill any category"));
 	
+	else{
 	//Transaction for inserting the post data into table post of database
         {
         dbo::Transaction transaction(sessionpost);
@@ -110,8 +113,8 @@ void addPost::enterpost()
         }
 	add_new->addWidget(postUpdated);
 	add_new->addWidget(viewPost);
+	}
 }
-
 void addPost::entercategory()
 {
 	{
